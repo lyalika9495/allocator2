@@ -6,21 +6,18 @@ enum states{
     _busy=1
 };
 
-struct memory_elem{
-    char *ptr;
+struct list
+{
+    struct list* next;
+    void *ptr;
     int size;
     states state;
 };
 
-struct list
-{
-    struct memory_elem* node;
-    struct list* next;
-};
-
-struct list* list_init(char * ptr, int size);
-struct list* add_elem(list *lst, char * ptr, int size);
-struct list* push_back(list* head, char * memory, int size);
+struct list* list_init(void * ptr, int size);
+void add_before(list* head, list* old_lst, list* new_lst);
+void push_back(list* head, list* new_lst);
+struct list* get_prev(list* head, list* lst);
 struct list* delete_elem(list *lst, list *head);
 
 struct list* best_fit(list* head, int size);

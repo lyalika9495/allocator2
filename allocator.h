@@ -29,33 +29,41 @@ public:
  */
 class Allocator {
     list* head;
-    char* memory;
+    void* common_memory;
+    void* support_memory;
+    void* support_ptr;
 
+    void* support_malloc();
+    void union_free_blocks();
 public:
     /*!
         Конструктор
         \param[in] size Размер резерва выделяемой памяти
     */
     explicit Allocator(int size);
+    ~Allocator() {
+//        std::free(this->memory);
+//        std::free(head);
+    }
 
     /*!
         Возвращает ветор пар, где каждая пара соответствует свободному блоку памяти и содержит расстояние от начала выделенной памяти и размер
-        \param[out] Вектор пар, в каждой из которых хранится сдвиг от начала памяти и размер свободного блока
+        \return Вектор пар, в каждой из которых хранится сдвиг от начала памяти и размер свободного блока
     */
-    vector<pair<int, int>> show_free_blocks();
+    void show_free_blocks(vector<pair<void*, int>>* free_blocks);
 
     /*!
         Возвращает ветор пар, где каждая пара соответствует занятому блоку памяти и содержит расстояние от начала выделенной памяти и размер
-        \param[out] Вектор пар, в каждой из которых хранится сдвиг от начала памяти и размер занятого блока
+        \return Вектор пар, в каждой из которых хранится сдвиг от начала памяти и размер занятого блока
     */
-    vector<pair<int, int>>  show_busy_blocks();
+    void show_busy_blocks(vector<pair<void*, int>>* busy_blocks);
 
     /*!
         Метод выделения памяти
         \param[in] size Размер выделяемой памяти
-        \param[out] Объект CleverPtr
+        \return Объект CleverPtr
     */
-    CleverPtr alloc(int size);
+    CleverPtr alloc(const int size);
 
     /*!
         Метод очистки памяти
@@ -64,8 +72,7 @@ public:
     void free(CleverPtr&);
 
     /*!
-        Метод объединяющий свободные соседние блоки памяти,
-        для получения одного блока большего размера
+        Метод выполняющий дефрагментацию основного блока памяти
     */
     void defrag();
 };
