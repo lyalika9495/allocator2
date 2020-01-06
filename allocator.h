@@ -42,8 +42,7 @@ public:
     */
     explicit Allocator(int size);
     ~Allocator() {
-//        std::free(this->memory);
-//        std::free(head);
+        std::free(this->common_memory);
     }
 
     /*!
